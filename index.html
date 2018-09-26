@@ -1,49 +1,330 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+	<title>Golang modules</title>
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+	<!-- Printing and PDF exports -->
+	<script>
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+	<style>
+		.red {
+			color: red;
+		}
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
-			});
-		</script>
-	</body>
+		.blue {
+			color: #1b91ff;
+		}
+
+		.green {
+			color: #c1ff0b;
+		}
+
+		.orange {
+			color: orange;
+		}
+
+		.gray {
+			color: #3f3f3f;
+		}
+
+		.yellow {
+			color: #F4FF77;
+		}
+
+		.black {
+			color: black;
+		}
+
+		.shadowed {
+			text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+		}
+	</style>
+
+</head>
+<body>
+<div class="reveal">
+	<div class="slides">
+
+		<section>
+			<h1 class="shadowed">
+				Go Modules <span class="green">for everyone</span>
+			</h1>
+			<p class="shadowed">
+				<small>
+					<a href="http://mauricio.github.io/">Maurício Linhares</a> /
+					<a href="http://twitter.com/mauriciojr">@mauriciojr</a> /
+					<span class="shadowed">Software Engineer at DigitalOcean</span>
+				</small>
+			</p>
+		</section>
+
+		<section>
+			<h1><span class="orange">Package management</span> is finally here</h1>
+			<p>
+				<span class="green">go mod</span> is now the official solution from the Go team
+			</p>
+		</section>
+
+		<section>
+			<h1>Create a package <span class="red">out</span> of your <span class="blue">GOPATH</span></h1>
+			<pre><code data-trim data-noescape>
+$ mkdir -p /tmp/scratchpad/hello
+$ cd /tmp/scratchpad/hello
+	</code></pre>
+		</section>
+
+		<section>
+			<h1>Init the <span class="green">module</span></h1>
+			<pre><code data-trim data-noescape>
+$ go mod init github.com/mauricio/hello
+go: creating new go.mod: module github.com/mauricio/hello
+	</code></pre>
+		</section>
+
+		<section>
+			<h1><span class="green">Write</span> some code</h1>
+			<pre><code data-trim data-noescape>
+package main
+
+import (
+    "fmt"
+    "rsc.io/quote"
+)
+
+func main() {
+    fmt.Println(quote.Hello())
+}
+	</code></pre>
+		</section>
+
+		<section>
+			<h1><span class="red">Build</span> it</h1>
+			<pre><code data-trim data-noescape>
+ $ go build
+go: finding rsc.io/quote v1.5.2
+go: downloading rsc.io/quote v1.5.2
+go: finding rsc.io/sampler v1.3.0
+go: finding golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c
+go: downloading rsc.io/sampler v1.3.0
+go: downloading golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c
+	</code></pre>
+		</section>
+
+		<section>
+			<h1><span class="red">Check</span> your <span class="green">go.mod</span></h1>
+			<pre><code data-trim data-noescape>
+ $ cat go.mod
+module github.com/mauricio/hello
+
+require rsc.io/quote v1.5.2
+	</code></pre>
+		</section>
+
+		<section>
+			<h1><span class="red">Adding</span> a dependency</h1>
+			<pre><code data-trim data-noescape>
+$ go get -u -v github.com/alwindoss/morse
+go: finding github.com/alwindoss/morse v1.0.0
+go: downloading github.com/alwindoss/morse v1.0.0
+github.com/alwindoss/morse
+	</code></pre>
+		</section>
+
+		<section>
+			<h1>Update the <span class="green">code</span></h1>
+			<pre><code data-trim data-noescape>
+package main
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/alwindoss/morse"
+	"rsc.io/quote"
+)
+
+func main() {
+	quote := quote.Hello()
+	fmt.Println(quote)
+	h := morse.NewHacker()
+	morseCode, err := h.Encode(strings.NewReader(quote))
+	if err != nil {
+		return
+	}
+	fmt.Println(morseCode)
+}
+	</code></pre>
+		</section>
+
+		<section>
+			<h1>Build!</h1>
+			<pre><code data-trim data-noescape>
+$ go build
+$ cat go.mod
+module github.com/mauricio/hello
+
+require (
+	9fans.net/go v0.0.0-20180727211846-5d4fa602e1e8 // indirect
+	github.com/acroca/go-symbols v0.0.0-20180523203557-953befd75e22 // indirect
+	github.com/alwindoss/morse v1.0.0
+	github.com/cosiner/argv v0.0.0-20170225145430-13bacc38a0a5 // indirect
+	github.com/derekparker/delve v1.1.0 // indirect
+	github.com/golang/lint v0.0.0-20180702182130-06c8688daad7 // indirect
+	github.com/karrick/godirwalk v1.7.3 // indirect
+	github.com/mattn/go-isatty v0.0.4 // indirect
+	github.com/mdempsky/gocode v0.0.0-20180727200127-00e7f5ac290a // indirect
+	github.com/peterh/liner v1.1.0 // indirect
+	github.com/ramya-rao-a/go-outline v0.0.0-20170803230019-9e9d089bb61a // indirect
+	github.com/rogpeppe/godef v1.0.0 // indirect
+	github.com/sirupsen/logrus v1.1.0 // indirect
+	github.com/spf13/cobra v0.0.3 // indirect
+	github.com/spf13/pflag v1.0.2 // indirect
+	github.com/sqs/goreturns v0.0.0-20180302073349-83e02874ec12 // indirect
+	github.com/uudashr/gopkgs v1.3.2 // indirect
+	golang.org/x/arch v0.0.0-20180920145803-b19384d3c130 // indirect
+	golang.org/x/lint v0.0.0-20180702182130-06c8688daad7 // indirect
+	golang.org/x/sys v0.0.0-20180926160741-c2ed4eda69e7 // indirect
+	golang.org/x/tools v0.0.0-20180926203008-ef4a2a23bb35 // indirect
+	gopkg.in/yaml.v2 v2.2.1 // indirect
+	rsc.io/quote v1.5.2
+)
+	</code></pre>
+		</section>
+
+		<section>
+			<h1>The tooling is fully aware of mod</h1>
+			<p>
+				The tools you're used to are all integrated and will add dependencies
+				when needed, you can also include versions when using go get as in <span class="green">go get -u -v github.com/alwindoss/morse@v1.0.0</span>
+			</p>
+		</section>
+
+		<section>
+			<h1>Versioning <span class="blue">modules</span></h1>
+			<p>
+				Modules should follow semantic versioning, there should be no removals or behavior changes
+				to existing modules unless it's a major version upgrade. Additions are fine. Tags have to be
+				in the form of v0.0.0.
+			</p>
+		</section>
+
+		<section>
+			<h1>
+				Include version in path when version is v2 or higher
+			</h1>
+			<p>
+				Module <span class="orange">github.com/mauricio/hello</span> becomes <span class="red">github.com/mauricio/hello/v2</span>
+				when v2 is reached. Not needed for v0 and v1.
+			</p>
+		</section>
+
+		<section>
+			<h1>Setting up <span class="green">modules</span> at an existing project</h1>
+			<pre><code data-trim data-noescape>
+$ git clone git@github.com:digitalocean/godo.git
+$ cd godo
+$ go mod init
+go: creating new go.mod: module github.com/digitalocean/godo
+	</code></pre>
+		</section>
+
+		<section>
+			<h1>Adding <span class="blue">dependencies</span></h1>
+			<pre><code data-trim data-noescape>
+ $ go mod tidy
+go: finding golang.org/x/oauth2 latest
+go: downloading golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be
+go: finding github.com/tent/http-link-go latest
+go: downloading github.com/tent/http-link-go v0.0.0-20130702225549-ac974c61c2f9
+go: finding github.com/google/go-querystring/query latest
+go: finding github.com/stretchr/testify/assert latest
+go: downloading github.com/google/go-querystring v1.0.0
+go: downloading github.com/stretchr/testify v1.2.2
+go: finding golang.org/x/net/context/ctxhttp latest
+go: finding golang.org/x/net/context latest
+go: finding github.com/davecgh/go-spew/spew latest
+go: finding github.com/pmezard/go-difflib/difflib latest
+go: downloading github.com/pmezard/go-difflib v1.0.0
+go: finding google.golang.org/appengine/urlfetch latest
+go: downloading google.golang.org/appengine v1.2.0
+go: downloading github.com/davecgh/go-spew v1.1.1
+go: finding golang.org/x/net latest
+go: downloading golang.org/x/net v0.0.0-20180926154720-4dfa2610cdf3
+go: downloading github.com/golang/protobuf v1.2.0
+go: finding golang.org/x/sync/errgroup latest
+go: finding golang.org/x/sync latest
+go: downloading golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f
+	</code></pre>
+		</section>
+
+		<section>
+			<h1>
+				Caveats?
+			</h1>
+			<p>
+				When running it for the first time in an existing project, it will pick the latest
+				versions of everything. That might not be what you're looking for. If you're using
+				one of the other dependency management tools it will use the tool config instead of latest.
+			</p>
+		</section>
+
+		<section>
+			<h1><span class="green">go.mod</span> and <span class="red">go.sum</span></h1>
+			<p>
+				Both files should be checked in but you should only ever touch <span class="green">go.mod</span>,
+				<span class="red">go.sum</span> contains the cryptographic signatures for the dependencies and is
+				generated by the toolchain, no need to touch it.
+			</p>
+		</section>
+
+		<section>
+			<h1>
+				What about <span class="blue">older</span> Go versions?
+			</h1>
+			<p>
+				<span class="orange">go mod vendor</span> creates a vendor directory compatible with previous
+				Go versions, it will be ignored for 1.11 and forward. Adding <span class="green">-mod=vendor</span> to
+				Go commands in 1.11 forces it to use the vendor directory for module projects.
+			</p>
+		</section>
+
+	</div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+  // More info about config & dependencies:
+  // - https://github.com/hakimel/reveal.js#configuration
+  // - https://github.com/hakimel/reveal.js#dependencies
+  Reveal.initialize({
+    dependencies: [
+      {src: 'plugin/markdown/marked.js'},
+      {src: 'plugin/markdown/markdown.js'},
+      {src: 'plugin/notes/notes.js', async: true},
+      {
+        src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+          hljs.initHighlightingOnLoad();
+        }
+      }
+    ]
+  });
+</script>
+</body>
 </html>
